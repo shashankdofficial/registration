@@ -22,26 +22,40 @@ public class SecurityConfig {
             throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/login.html",
-                                "/signup.html",
-                                "/dashboard.html",
-                                "/js/**",
-                                "/css/**")
-                        .permitAll()
+            .csrf(csrf -> csrf.disable())
 
-                        .requestMatchers("/api/auth/**").permitAll()
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 
-                        .requestMatchers("/api/**").authenticated()
+            .authorizeHttpRequests(auth -> auth
 
-                        .anyRequest().denyAll())
+                // ✅ Public pages
+                .requestMatchers(
+                        "/",
+                        "/login.html",
+                        "/signup.html",
+                        "/dashboard.html",
+                        "/js/**",
+                        "/css/**",
+                        "/images/**",
+                        "/error"
+                ).permitAll()
 
-                .addFilterBefore(
-                        jwtAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                // ✅ Auth APIs
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // 🔒 Protected APIs
+                .requestMatchers("/api/**").authenticated()
+
+                // 🔐 Everything else requires auth (NOT denyAll)
+                .anyRequest().authenticated()
+            )
+
+            .addFilterBefore(
+                jwtAuthFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
