@@ -127,7 +127,7 @@ function loadUser() {
 // }
 
 function logout() {
-    fetch("http://localhost:8080/api/auth/logout", {
+    fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include"
     })
