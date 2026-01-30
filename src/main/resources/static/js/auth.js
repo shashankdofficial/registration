@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/auth";
+const API_URL = "/api/auth";
 
 // ======================
 // SIGNUP
@@ -101,7 +101,7 @@ function login() {
 // }
 
 function loadUser() {
-    fetch("http://localhost:8080/api/user/me", {
+    fetch("/api/user/me", {
         credentials: "include"
     })
     .then(res => {
